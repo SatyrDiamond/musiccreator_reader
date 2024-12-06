@@ -95,11 +95,8 @@ class mc_section:
 			if n == 4: self.unk4 = x
 			if n == 5: self.color = x
 			if n == 6: self.unk6 = x
-			if n == 7: 
-				self.auto = mc_sectionauto(x.split('='))
-				#self.auto = [[x.split('#') for x in x.split('!')] for y in c]
+			if n == 7: self.auto = mc_sectionauto(x.split('='))
 			if n == 8: self.unk8 = x
-		print(self.unk4, self.color, self.unk6)
 
 class mc_sectionauto:
 	def __init__(self, indata):
@@ -125,6 +122,32 @@ class mc_general:
 				if n == 2: self.trackvol = [int(y) for y in x]
 				if n == 9: self.tracknames = [decode_string(y) for y in x]
 
+class mc_sectionfolder:
+	def __init__(self, indata):
+		self.name = ''
+		self.id = 0
+		self.open = False
+		if indata: self.read(indata)
+
+	def read(self, indata):
+		for n, x in enumerate(indata.split('=')):
+			if n == 0: self.name = decode_string(x)
+			if n == 1: self.id = int(x)
+			if n == 2: self.open = x == 'true'
+
+class mc_sectionorder:
+	def __init__(self, indata):
+		self.folders = []
+		self.order = []
+		if indata: self.read(indata)
+
+	def read(self, indata):
+		for n, x in enumerate(indata):
+			if n == 0: 
+				for f in x: self.folders.append(mc_sectionfolder(f))
+			if n == 1: self.order = x
+
+
 class mc_song:
 	def __init__(self):
 		self.general = mc_general(None)
@@ -146,8 +169,10 @@ class mc_song:
 			if n == 3: self.instrument = [mc_instrument(x.split(',')) for x in d.split(';')]
 			if n == 4: self.drum_kit = [mc_instrument(x.split(',')) for x in d.split(';')]
 			if n == 5: self.sound_font = [mc_soundfont(x.split(',')) for x in d.split(';')]
-			if n == 6: self.section_order = [x.split(',') for x in d.split(';')]
+			if n == 6: self.section_order = mc_sectionorder([x.split(',') for x in d.split(';')])
 
 
 testin = mc_song()
 testin.load_from_file("C:\\Program Files (x86)\\MuMuNebula\\emulator\\nebula\\nebula\\fs_dynamic\\data\\data\\com.musicmaker.mobile.android\\files\\projects\\vn92aN4tsUENzZzN")
+
+
