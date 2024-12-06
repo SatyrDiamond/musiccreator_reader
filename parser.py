@@ -80,7 +80,7 @@ class mc_section:
 		self.unk2 = ''
 		self.notes = ''
 		self.unk4 = ''
-		self.unk5 = ''
+		self.color = ''
 		self.unk6 = ''
 		self.unk7 = []
 		self.unk8 = ''
@@ -93,12 +93,13 @@ class mc_section:
 			if n == 2: self.unk2 = x
 			if n == 3: self.notes = x
 			if n == 4: self.unk4 = x
-			if n == 5: self.unk5 = x
+			if n == 5: self.color = x
 			if n == 6: self.unk6 = x
 			if n == 7: 
 				self.auto = mc_sectionauto(x.split('='))
 				#self.auto = [[x.split('#') for x in x.split('!')] for y in c]
 			if n == 8: self.unk8 = x
+		print(self.unk4, self.color, self.unk6)
 
 class mc_sectionauto:
 	def __init__(self, indata):
